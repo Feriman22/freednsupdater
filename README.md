@@ -1,5 +1,5 @@
 # FreeDNS Updater
-Lightweight FreeDDNS IP Updater for afraid.org, based on a Docker container.<br><br>
+Lightweight FreeDDNS IP Updater for afraid.org, based on a [Docker container](https://hub.docker.com/r/feriman25/freednsupdater).<br><br>
 The motivation behind the project is that it is not necessary to use a lot of resources to keep the IP address of your DDNS address fresh. So, for example, this Docker image is an excellent replacement for ddclient. Smaller size, less resources, less code, less chance of something going wrong.<br>
 I tried to prepare the script running in the docker container for as many eventualities as possible. If it detects an error, it will exit, and the container will restart automatically (if you have it set up that way - for Portainer, it's the default).
 
