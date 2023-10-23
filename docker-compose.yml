@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  freednsupdater:
+    image: feriman25/freednsupdater
+    container_name: freednsupdater
+    environment:
+      - APIURL=https://freedns.afraid.org/api/?action=getdyndns&v=2&sha=yourrandomshastring
+#      - DDNSDOMAIN=
+#      - CheckAgainInXSec=300  
+    restart: always
+    network_mode: bridge
