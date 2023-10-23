@@ -38,7 +38,7 @@ UPDATEURL="$(curl -s "$APIURL" | awk -F'|' '{print $3;}')"
 # Avoid flood
 [ "$CheckAgainInXSec" -lt "10" ] && echo "$(date) - ERROR: Do not flood anyone. You have set the CheckAgainInXSec value too low. Exit." | tee "$LOG" && exit 73
 
-# Valiadte IP function
+# Validate IP function
 validateip() {
 	[[ "$1" =~ ^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$ ]]
 }
@@ -57,9 +57,14 @@ getddnsip() {
 # Core of the script - run periodically
 while true; do
 
-	# Get current external IP - check from random IP check providers, and exit on the first working one
+	# List of IP providers
 	providers=("ident.me" "ipinfo.io/ip" "ifconfig.me" "api.ipify.org")
-	for provider in "${providers[@]}"; do
+ 
+ 	# Shuffle the array
+	shuffled_providers=($(shuf -e "${providers[@]}"))
+
+	# Get current external IP - check from random IP check providers, and exit on the first working one
+	for provider in "${shuffled_providers[@]}"; do
 		CURRENT_IP="$(curl -s "$provider")"
 		# Validate the IP address
 		if ! validateip "$CURRENT_IP"; then
