@@ -80,6 +80,7 @@ while true; do
 
 		# Enter here only first time
 		if [ ! -f "$IPSTORE" ]; then
+  			echo "$(date) - INFO: The script has been started successfully."
 			getddnsip
 			[ "$CURRENT_IP" != "$DDNSIP" ] && updateip && IPUPDATED="true"
 
