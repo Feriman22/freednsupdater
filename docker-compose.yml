@@ -5,7 +5,7 @@ services:
     image: feriman25/freednsupdater
     container_name: freednsupdater
     environment:
-      - APIURL=https://freedns.afraid.org/api/?action=getdyndns&v=2&sha=49d3b0e8b89d14b825d9720db041a37642c697cd
+      - APIURL=https://freedns.afraid.org/api/?action=getdyndns&v=2&sha=yourrandomshastring
 #      - DDNSDOMAIN=
 #      - CheckAgainInXSec=300  
     restart: always
