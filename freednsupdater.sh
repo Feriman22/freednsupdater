@@ -83,6 +83,7 @@ while true; do
   			echo "$(date) - INFO: The script has been started successfully."
 			getddnsip
 			[ "$CURRENT_IP" != "$DDNSIP" ] && updateip && IPUPDATED="true"
+   			[ "$CURRENT_IP" == "$DDNSIP" ] && echo "$CURRENT_IP" > "$IPSTORE"
 
 		# Check if the stored IP is different than the current IP
 		elif [ "$CURRENT_IP" != "$(cat $IPSTORE)" ]; then
