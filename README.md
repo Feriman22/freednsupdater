@@ -27,7 +27,7 @@ Optional. If you set a valid number, the external IP will be checked for changes
 All logs are stored in the /tmp/afraid-ddns-ip-updater.log file inside the container.
 
 ### Exit codes:
-70: APIURL variable is missing<br>
+70: APIURL variable is missing. You have to define it in the docker-compose.yml file<br>
 71: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable<br>
 72: curl command not found (not installed or not placed in default paths)<br>
 73: Do not flood anyone. You have set the CheckAgainInXSec value too low. It's a built-in feature to avoid overloading afraid.org or any IP check provider.
