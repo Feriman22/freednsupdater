@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  freednsupdater:
+    image: feriman25/freednsupdater
+    environment:
+      - APIURL=https://freedns.afraid.org/api/?action=getdyndns&v=2&sha=yourrandomshastringishere
+      - DDNSDOMAIN=yourdomain.mooo.com # Optional
+      - CheckAgainInXSec=300 # Optional
