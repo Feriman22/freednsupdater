@@ -73,7 +73,7 @@ while true; do
 			GOTIP="true"
 			break
 		fi
-	done | shuf
+	done
 
 	# Validate that we have an IP from one IP provider
 	if [ "$GOTIP" ]; then
