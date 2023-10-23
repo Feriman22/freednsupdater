@@ -5,7 +5,8 @@ Hosted on GitHub: https://github.com/Feriman22/freednsupdater
 Written by Feriman (Feriman.com)
 
 Set these variables in your docker-compose.yml:
-APIURL # Required. Go to https://freedns.afraid.org/api/, login and click on the "ASCII" link. Add the URL to your browser as a variable
+APIURL # Required. Go to https://freedns.afraid.org/api/, login and click on the "ASCII" link. Add the URL to your browser as a variable.
+	# Note: You will need to update this every time you change your password on afraid.org
 DDNSDOMAIN # Optional. If you have multiple domains, define them, otherwise the script will exit.
 CheckAgainInXSec # Optional. If you set a valid number, the external IP will be checked for changes every $CheckAgainInXSec seconds. The minimum value is 10.
 
