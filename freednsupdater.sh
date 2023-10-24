@@ -21,34 +21,34 @@ Exit codes:
 
 "
 
-# Variables
+# Main variables
 [ ! "$APIURL" ] && echo "$(date) - ERROR: APIURL variable is missing. Exit." | tee "$LOG" && exit 70
 [[ "$CheckAgainInXSec" != ?(-)+([0-9]) ]] && CheckAgainInXSec=300  # Set default if not exists or invalid
 IPSTORE="/tmp/externalip.txt"
 LOG="/tmp/afraid-ddns-ip-updater.log"
 
-# Generate variables
+# Validate & generate variables
 [ "$(curl -s "$APIURL" | wc -l)" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
 [ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(curl -s "$APIURL" | awk -F'|' '{print $1;}')"
 UPDATEURL="$(curl -s "$APIURL" | awk -F'|' '{print $3;}')"
 
-# Check curl command
+# cURL command verification
 ! command -v curl > /dev/null && echo "$(date) - ERROR: curl command not found. Exit." | tee "$LOG" && exit 72
 
-# Avoid flood
+# Avoid flooding
 [ "$CheckAgainInXSec" -lt "10" ] && echo "$(date) - ERROR: Do not flood anyone. You have set the CheckAgainInXSec value too low. Exit." | tee "$LOG" && exit 73
 
-# Validate IP function
+# Function: Validate IP
 validateip() {
 	[[ "$1" =~ ^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$ ]]
 }
 
-# Update DDNS IP on afraid.org function
+# Function: Update DDNS IP on afraid.org
 updateip() {
 	curl -s "$UPDATEURL"
 }
 
-# Get the current IP of DDNS from afraid.org function
+# Function: Get the current IP of DDNS from afraid.org
 getddnsip() {
 	DDNSIP=$(curl -s "$APIURL" | awk -F'|' '{print $2;}')
 	! validateip "$DDNSIP" && echo "$(date) - WARNING: Invalid DDNS IP." | tee "$LOG"
@@ -56,13 +56,10 @@ getddnsip() {
 
 # Core of the script - run periodically
 while true; do
-
 	# List of IP providers
 	providers=("ident.me" "ipinfo.io/ip" "ifconfig.me" "api.ipify.org")
- 
  	# Shuffle the array
 	shuffled_providers=($(shuf -e "${providers[@]}"))
-
 	# Get current external IP - check from random IP check providers, and exit on the first working one
 	for provider in "${shuffled_providers[@]}"; do
 		CURRENT_IP="$(curl -s "$provider")"
@@ -77,13 +74,13 @@ while true; do
 
 	# Validate that we have an IP from one IP provider
 	if [ "$GOTIP" ]; then
-
 		# Enter here only first time
 		if [ ! -f "$IPSTORE" ]; then
   			echo "$(date) - INFO: The script has been started successfully."
 			getddnsip
    			if [ "$CURRENT_IP" == "$DDNSIP" ]; then
       				echo "$CURRENT_IP" > "$IPSTORE"
+	  			unset DDNSIP
 	  		else
      				updateip
 	 			IPUPDATED="true"
@@ -91,10 +88,8 @@ while true; do
 
 		# Check if the stored IP is different than the current IP
 		elif [ "$CURRENT_IP" != "$(cat $IPSTORE)" ]; then
-
 			# Check if freedns.afraid.org is available
 			if curl -s https://freedns.afraid.org > /dev/null; then
-
 				# Update the IP of DDNS
 				updateip
 			else
