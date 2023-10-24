@@ -30,15 +30,15 @@ IPSTORE="/tmp/externalip.txt"
 LOG="/tmp/afraid-ddns-ip-updater.log"
 
 # Validate & generate variables
-[ "$(curl -s "$APIURL" | wc -l)" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
-[ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(curl -s "$APIURL" | cut -d '|' -f 1)"
-UPDATEURL="$(curl -s "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
+[ "$(wget -O >(cat) "$APIURL" | grep -c 'afraid.org')" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
+[ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(wget -O >(cat) "$APIURL" | cut -d '|' -f 1)"
+UPDATEURL="$(wget -O >(cat) "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
 
 # Remove local IP cache file to avoid issues
 rm -f "$IPSTORE"
 
-# cURL command verification
-! command -v curl > /dev/null && echo "$(date) - ERROR: curl command not found. Exit." | tee "$LOG" && exit 72
+# wget command verification
+! command -v wget > /dev/null && echo "$(date) - ERROR: wget command not found. Exit." | tee "$LOG" && exit 72
 
 # Avoid flooding
 [ "$CheckAgainInXSec" -lt "10" ] && echo "$(date) - ERROR: Do not flood anyone. You have set the CheckAgainInXSec value too low. Exit." | tee "$LOG" && exit 73
@@ -50,14 +50,14 @@ validateip() {
 
 # Function: Update DDNS IP on afraid.org
 updateip() {
-	curl -s "$UPDATEURL"
+	wget -O >(cat) "$UPDATEURL"
  	echo "$(date) - INFO: Updating IP for $DDNSDOMAIN..."
  	IPUPDATED="true"
 }
 
 # Function: Get the current IP of DDNS from afraid.org
 getddnsip() {
-	DDNSIP=$(curl -s "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 2)
+	DDNSIP=$(wget -O >(cat) "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 2)
 	! validateip "$DDNSIP" && echo "$(date) - WARNING: Invalid DDNS IP ($DDNSIP) for $DDNSDOMAIN." | tee "$LOG"
 }
 
@@ -69,7 +69,7 @@ while true; do
 	shuffled_providers=($(shuf -e "${providers[@]}"))
 	# Get current external IP - check from random IP check providers, and exit on the first working one
 	for provider in "${shuffled_providers[@]}"; do
-		CURRENT_IP="$(curl -s "$provider")"
+		CURRENT_IP="$(wget -O >(cat) "$provider")"
 		# Validate the IP address
 		if ! validateip "$CURRENT_IP"; then
 			echo "$(date) - WARNING: $provider is not working now, the IP is invalid ($CURRENT_IP). Try to the next one." | tee "$LOG" && continue
@@ -95,7 +95,7 @@ while true; do
 		# Check if the stored IP is different than the current IP
 		elif [ "$CURRENT_IP" != "$(cat $IPSTORE)" ]; then
 			# Check if freedns.afraid.org is available
-			if curl -s https://freedns.afraid.org > /dev/null; then
+			if wget -O >(cat) https://freedns.afraid.org > /dev/null; then
 				# Update the IP of DDNS
 				updateip
 			else
