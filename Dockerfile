@@ -2,7 +2,7 @@
 FROM alpine:latest
 
 # Install curl and bash
-RUN apk update && apk add --no-cache curl bash
+RUN apk update && apk add --no-cache bash
 
 # Set the working directory
 WORKDIR /app
