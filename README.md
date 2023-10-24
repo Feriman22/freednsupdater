@@ -1,6 +1,10 @@
 # FreeDNS Updater
 Lightweight FreeDDNS IP Updater for afraid.org, based on a [Docker container](https://hub.docker.com/r/feriman25/freednsupdater).<br><br>
 The motivation behind the project is that it is not necessary to use a lot of resources to keep the IP address of your DDNS address fresh. So, for example, this Docker image is an excellent replacement for ddclient. Smaller size, less resources, less code, less chance of something going wrong.<br><br>
+Just a quick comparison of Docker image sizes:<br>
+ddclient: 24.26MB<br>
+freednsupdater: 4.01MB<br><br>
+
 It is also resource-efficient from a network point of view, because it only makes an API call to afraid.org when the container is started (it checks once to see if it is in sync) or when it needs to update the IP address because it has been changed. Otherwise it is stored locally and works from a cache file. And it retrieves the external IP address from different providers, selecting them randomly, so no provider is overloaded.
 
 ### Set these variables in your docker-compose.yml:<br>
