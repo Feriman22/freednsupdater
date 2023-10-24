@@ -19,6 +19,8 @@ Exit codes:
 72: curl command not found (not installed or not placed in default paths)
 73: Do not flood anyone. You have set the CheckAgainInXSec value too low. It's a built-in feature to avoid overloading afraid.org or any IP check provider.
 
+------- SCRIPT STARTS -------
+
 "
 
 # Main variables
@@ -46,13 +48,14 @@ validateip() {
 # Function: Update DDNS IP on afraid.org
 updateip() {
 	curl -s "$UPDATEURL"
+ 	echo "$(date) - INFO: Updating IP for $DDNSDOMAIN..."
  	IPUPDATED="true"
 }
 
 # Function: Get the current IP of DDNS from afraid.org
 getddnsip() {
 	DDNSIP=$(curl -s "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 2)
-	! validateip "$DDNSIP" && echo "$(date) - WARNING: Invalid DDNS IP." | tee "$LOG"
+	! validateip "$DDNSIP" && echo "$(date) - WARNING: Invalid DDNS IP ($DDNSIP) for $DDNSDOMAIN." | tee "$LOG"
 }
 
 # Core of the script - run periodically
@@ -77,9 +80,9 @@ while true; do
 	if [ "$GOTIP" ]; then
 		# Enter here only first time
 		if [ ! -f "$IPSTORE" ]; then
-  			echo "$(date) - INFO: The script has been started successfully."
 			getddnsip
    			if [ "$CURRENT_IP" == "$DDNSIP" ]; then
+      				echo "$(date) - INFO: The IP already set for $DDNSDOMAIN."
       				echo "$CURRENT_IP" > "$IPSTORE"
 	  			unset DDNSIP
 	  		else
@@ -93,7 +96,7 @@ while true; do
 				# Update the IP of DDNS
 				updateip
 			else
-				echo "$(date) - ERROR: freedns.afraid.org is not available." | tee "$LOG"
+				echo "$(date) - ERROR: freedns.afraid.org is not available at this time." | tee "$LOG"
 			fi
 		fi
 	else
@@ -107,7 +110,7 @@ while true; do
 	if [ "$IPUPDATED" ]; then
 		getddnsip
 		if [ "$CURRENT_IP" == "$DDNSIP" ]; then
-			echo "$(date) - INFO: IP has been updated to $CURRENT_IP" | tee "$LOG"
+			echo "$(date) - INFO: Verification completed. The $CURRENT_IP IP has been set for $DDNSDOMAIN" | tee "$LOG"
 			echo "$CURRENT_IP" > "$IPSTORE"
 			unset IPUPDATED DDNSIP
 		else
