@@ -30,9 +30,9 @@ IPSTORE="/tmp/externalip.txt"
 LOG="/tmp/afraid-ddns-ip-updater.log"
 
 # Validate & generate variables
-[ "$(wget -O >(cat) "$APIURL" | grep -c 'afraid.org')" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
-[ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(wget -O >(cat) "$APIURL" | cut -d '|' -f 1)"
-UPDATEURL="$(wget -O >(cat) "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
+[ "$(wget -q -O >(cat) "$APIURL" | grep -c 'afraid.org')" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
+[ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(wget -q -O >(cat) "$APIURL" | cut -d '|' -f 1)"
+UPDATEURL="$(wget -q -O >(cat) "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
 
 # Remove local IP cache file to avoid issues
 rm -f "$IPSTORE"
@@ -50,14 +50,14 @@ validateip() {
 
 # Function: Update DDNS IP on afraid.org
 updateip() {
-	wget -O >(cat) "$UPDATEURL"
+	wget -q -O >(cat) "$UPDATEURL"
  	echo "$(date) - INFO: Updating IP for $DDNSDOMAIN..."
  	IPUPDATED="true"
 }
 
 # Function: Get the current IP of DDNS from afraid.org
 getddnsip() {
-	DDNSIP=$(wget -O >(cat) "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 2)
+	DDNSIP=$(wget -q -O >(cat) "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 2)
 	! validateip "$DDNSIP" && echo "$(date) - WARNING: Invalid DDNS IP ($DDNSIP) for $DDNSDOMAIN." | tee "$LOG"
 }
 
@@ -69,7 +69,7 @@ while true; do
 	shuffled_providers=($(shuf -e "${providers[@]}"))
 	# Get current external IP - check from random IP check providers, and exit on the first working one
 	for provider in "${shuffled_providers[@]}"; do
-		CURRENT_IP="$(wget -O >(cat) "$provider")"
+		CURRENT_IP="$(wget -q -O >(cat) "$provider")"
 		# Validate the IP address
 		if ! validateip "$CURRENT_IP"; then
 			echo "$(date) - WARNING: $provider is not working now, the IP is invalid ($CURRENT_IP). Try to the next one." | tee "$LOG" && continue
@@ -95,7 +95,7 @@ while true; do
 		# Check if the stored IP is different than the current IP
 		elif [ "$CURRENT_IP" != "$(cat $IPSTORE)" ]; then
 			# Check if freedns.afraid.org is available
-			if wget -O >(cat) https://freedns.afraid.org > /dev/null; then
+			if wget -q -O >(cat) https://freedns.afraid.org > /dev/null; then
 				# Update the IP of DDNS
 				updateip
 			else
