@@ -16,7 +16,7 @@ All logs are stored in the /tmp/afraid-ddns-ip-updater.log file inside the conta
 Exit codes:
 70: APIURL variable is missing
 71: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable
-72: curl command not found (not installed or not placed in default paths)
+72: wget command not found (not installed or not placed in default paths)
 73: Do not flood anyone. You have set the CheckAgainInXSec value too low. It's a built-in feature to avoid overloading afraid.org or any IP check provider.
 
 ------- SCRIPT STARTS -------
