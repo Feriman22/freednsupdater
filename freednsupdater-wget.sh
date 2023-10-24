@@ -95,7 +95,7 @@ while true; do
 		# Check if the stored IP is different than the current IP
 		elif [ "$CURRENT_IP" != "$(cat $IPSTORE)" ]; then
 			# Check if freedns.afraid.org is available
-			if wget -q -O >(cat) https://freedns.afraid.org > /dev/null; then
+			if wget -q -O /dev/null https://freedns.afraid.org > /dev/null; then
 				# Update the IP of DDNS
 				updateip
 			else
