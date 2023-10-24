@@ -29,8 +29,8 @@ LOG="/tmp/afraid-ddns-ip-updater.log"
 
 # Validate & generate variables
 [ "$(curl -s "$APIURL" | wc -l)" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
-[ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(curl -s "$APIURL" | awk -F'|' '{print $1;}')"
-UPDATEURL="$(curl -s "$APIURL" | awk -F'|' '{print $3;}')"
+[ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(curl -s "$APIURL" | cut -d '|' -f 1)"
+UPDATEURL="$(curl -s "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
 
 # cURL command verification
 ! command -v curl > /dev/null && echo "$(date) - ERROR: curl command not found. Exit." | tee "$LOG" && exit 72
@@ -51,7 +51,7 @@ updateip() {
 
 # Function: Get the current IP of DDNS from afraid.org
 getddnsip() {
-	DDNSIP=$(curl -s "$APIURL" | awk -F'|' '{print $2;}')
+	DDNSIP=$(curl -s "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 2)
 	! validateip "$DDNSIP" && echo "$(date) - WARNING: Invalid DDNS IP." | tee "$LOG"
 }
 
@@ -103,7 +103,7 @@ while true; do
 	# Sleep for $CheckAgainInXSec seconds
 	sleep "$CheckAgainInXSec"
 
-	# Validate that the DDNS IP has been updated
+	# Verify that the DDNS IP has been updated
 	if [ "$IPUPDATED" ]; then
 		getddnsip
 		if [ "$CURRENT_IP" == "$DDNSIP" ]; then
