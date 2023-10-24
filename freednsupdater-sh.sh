@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ash
 
 echo "This script will update your DDNS address at afraid.org to your current IP address, if necessary, based on the values you set.
 Hosted on GitHub: https://github.com/Feriman22/freednsupdater
