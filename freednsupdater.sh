@@ -46,6 +46,7 @@ validateip() {
 # Function: Update DDNS IP on afraid.org
 updateip() {
 	curl -s "$UPDATEURL"
+ 	IPUPDATED="true"
 }
 
 # Function: Get the current IP of DDNS from afraid.org
@@ -83,7 +84,6 @@ while true; do
 	  			unset DDNSIP
 	  		else
      				updateip
-	 			IPUPDATED="true"
 			fi
 
 		# Check if the stored IP is different than the current IP
