@@ -23,10 +23,13 @@ Optional. If you set a valid number, the external IP will be checked for changes
     services:
       freednsupdater:
         image: feriman25/freednsupdater
+        container_name: freednsupdater
         environment:
-          - APIURL=https://freedns.afraid.org/api/?action=getdyndns&v=2&sha=yourrandomshastringishere
-          - DDNSDOMAIN=yourdomain.mooo.com # Optional
-          - CheckAgainInXSec=300 # Optional
+          - APIURL=https://freedns.afraid.org/api/?action=getdyndns&v=2&sha=yourrandomshastring
+    #      - DDNSDOMAIN=
+    #      - CheckAgainInXSec=300  
+        restart: always
+        network_mode: bridge
 
 
 ### Debug:
