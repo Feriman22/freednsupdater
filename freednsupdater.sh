@@ -34,6 +34,9 @@ LOG="/tmp/afraid-ddns-ip-updater.log"
 [ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(curl -s "$APIURL" | cut -d '|' -f 1)"
 UPDATEURL="$(curl -s "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
 
+# Remove local IP cache file to avoid issues
+rm -f "$IPSTORE"
+
 # cURL command verification
 ! command -v curl > /dev/null && echo "$(date) - ERROR: curl command not found. Exit." | tee "$LOG" && exit 72
 
