@@ -6,17 +6,8 @@ ddclient: 24.26MB<br>
 freednsupdater: 4.01MB<br><br>
 
 It is also resource-efficient from a network point of view, because it only makes an API call to afraid.org when the container is started (it checks once to see if it is in sync) or when it needs to update the IP address because it has been changed. Otherwise it is stored locally and works from a cache file. And it retrieves the external IP address from different providers, selecting them randomly, so no provider is overloaded.
-
-### Set these variables in your docker-compose.yml:<br>
-**APIURL**<br>
-Required. Go to https://freedns.afraid.org/api/, login and click on the "ASCII" link. Add the URL to your browser as a variable.<br>
-Note: You will need to update this every time you change your password on afraid.org<br><br>
-**DDNSDOMAIN**<br>
-Optional. If you have multiple domains, define them, otherwise the script will exit.<br><br>
-**CheckAgainInXSec**<br>
-Optional. If you set a valid number, the external IP will be checked for changes every $CheckAgainInXSec seconds. The minimum value is 10.<br>
-
-### docker-compose.yml:
+<br><br>
+## docker-compose.yml:
 
     version: '3'
 
@@ -30,13 +21,30 @@ Optional. If you set a valid number, the external IP will be checked for changes
     #      - CheckAgainInXSec=300  
         restart: always
         network_mode: bridge
-
-
-### Debug:
+<br><br>
+## Available variables in docker-compose.yml:<br>
+**APIURL**<br>
+Required. Go to https://freedns.afraid.org/api/, login and click on the "ASCII" link. Add the URL to your browser as a variable.<br>
+Note: You will need to update this every time you change your password on afraid.org<br><br>
+**DDNSDOMAIN**<br>
+Optional. If you have one DDNS address, the script will recognize it. However, if you have multiple domains, define them, otherwise the script will exit.<br><br>
+**CheckAgainInXSec**<br>
+Optional. If you set a valid number, the external IP will be checked for changes every $CheckAgainInXSec seconds. The minimum value is 10.<br>
+<br><br>
+## Debug:
 All logs are stored in the /tmp/afraid-ddns-ip-updater.log file inside the container.
-
-### Exit codes:
+<br><br>
+## Exit codes:
 70: APIURL variable is missing. You have to define it in the docker-compose.yml file<br>
 71: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable<br>
 72: wget command not found (not installed or not placed in default paths)<br>
 73: Do not flood anyone. You have set the CheckAgainInXSec value too low. It's a built-in feature to avoid overloading afraid.org or any IP check provider.
+<br><br>
+## Known bugs
+- All software has bugs, but we have not yet found any in this one. If you find one, open an issue for it [here on GitHub](https://github.com/Feriman22/freednsupdater/issues).
+<br><br>
+## Do not forget
+
+If you found my work helpful, I would greatly appreciate it if you could make a **[donation through PayPal](https://paypal.me/BajzaFerenc)** to support my efforts in improving and fixing bugs or creating more awesome scripts. Thank you!
+
+<a href='https://paypal.me/BajzaFerenc'><img height='36' style='border:0px;height:36px;' src='https://raw.githubusercontent.com/Feriman22/portscan-protection/master/paypal-donate.png' border='0' alt='Donate with Paypal' />  
