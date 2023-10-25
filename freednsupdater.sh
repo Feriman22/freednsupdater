@@ -50,8 +50,8 @@ validateip() {
 
 # Function: Update DDNS IP on afraid.org
 updateip() {
+	echo "$(date) - INFO: Updating IP for $DDNSDOMAIN..."
 	wget -q -O >(cat) "$UPDATEURL"
- 	echo "$(date) - INFO: Updating IP for $DDNSDOMAIN..."
  	IPUPDATED="true"
 }
 
@@ -83,6 +83,7 @@ while true; do
 	if [ "$GOTIP" ]; then
 		# Enter here only first time
 		if [ ! -f "$IPSTORE" ]; then
+  			echo "$(date) - INFO: Script has been started. Check the IP of $DDNSDOMAIN"
 			getddnsip
    			if [ "$CURRENT_IP" == "$DDNSIP" ]; then
       				echo "$(date) - INFO: The IP already set for $DDNSDOMAIN."
