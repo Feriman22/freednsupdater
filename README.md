@@ -1,4 +1,9 @@
 # FreeDNS Updater
+[![Release](https://img.shields.io/github/release/jlesage/docker-firefox.svg?logo=github&style=for-the-badge)](https://github.com/feriman25/freednsupdater/releases/latest)
+[![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/firefox/latest?logo=docker&style=for-the-badge)](https://hub.docker.com/r/feriman25/freednsupdater/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jlesage/firefox?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/feriman25/freednsupdater/tags)
+[![Docker Stars](https://img.shields.io/docker/stars/jlesage/firefox?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/feriman25/freednsupdater/tags)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://paypal.me/BajzaFerenc)<br><br>
 Lightweight FreeDDNS IP Updater for afraid.org, based on a [Docker container](https://hub.docker.com/r/feriman25/freednsupdater).<br><br>
 The motivation behind the project is that it is not necessary to use a lot of resources to keep the IP address of your DDNS address fresh. So, for example, this Docker image is an excellent replacement for ddclient. Smaller size, less resources, less code, less chance of something going wrong.<br><br>
 Just a quick comparison of Docker image sizes:<br>
