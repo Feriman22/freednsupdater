@@ -31,5 +31,4 @@ jobs:
         push: true
         tags: |
           feriman25/freednsupdater:latest
-          feriman25/freednsupdater:${{ github.sha }}
           feriman25/freednsupdater:v1.2
