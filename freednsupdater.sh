@@ -32,16 +32,17 @@ LOG="/tmp/afraid-ddns-ip-updater.log"
 # Validate & generate variables
 [ "$(wget -qO- "$APIURL" | grep -c 'afraid.org')" -gt "1" ] && [ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: You have multiple DDNS addresses, and have not defined the DDNSDOMAIN variable. Exit." | tee "$LOG" && exit 71
 [ ! "$DDNSDOMAIN" ] && DDNSDOMAIN="$(wget -qO- "$APIURL" | cut -d '|' -f 1)"
+[ ! "$DDNSDOMAIN" ] && echo "$(date) - ERROR: Failed to get DDNSDOMAIN variable. Do you have an Internet connection? Exit." | tee "$LOG" && exit 72
 UPDATEURL="$(wget -qO- "$APIURL" | grep "$DDNSDOMAIN" | cut -d '|' -f 3)"
 
 # Remove local IP cache file to avoid issues
 rm -f "$IPSTORE"
 
 # wget command verification
-! command -v wget > /dev/null && echo "$(date) - ERROR: wget command not found. Exit." | tee "$LOG" && exit 72
+! command -v wget > /dev/null && echo "$(date) - ERROR: wget command not found. Exit." | tee "$LOG" && exit 73
 
 # Avoid flooding
-[ "$CheckAgainInXSec" -lt "10" ] && echo "$(date) - ERROR: Do not flood anyone. You have set the CheckAgainInXSec value too low. Exit." | tee "$LOG" && exit 73
+[ "$CheckAgainInXSec" -lt "10" ] && echo "$(date) - ERROR: Do not flood anyone. You have set the CheckAgainInXSec value too low. Exit." | tee "$LOG" && exit 74
 
 # Function: Validate IP
 validateip() {
