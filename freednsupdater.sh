@@ -73,16 +73,15 @@ while true; do
 	for provider in "${shuffled_providers[@]}"; do
 		CURRENT_IP="$(wget -qO- "$provider")"
 		# Validate the IP address
-		if ! validateip "$CURRENT_IP"; then
+		if validateip "$CURRENT_IP"; then
+  			break
+     		else
 			echo "$(date) - WARNING: $provider is not working now, the IP is invalid ($CURRENT_IP). Try to the next one." | tee "$LOG" && continue
-		else
-			GOTIP="true"
-			break
 		fi
 	done
 
 	# Validate that we have an IP from one IP provider
-	if [ "$GOTIP" ]; then
+	if [ "$CURRENT_IP" ]; then
 		# Enter here only first time
 		if [ ! -f "$IPSTORE" ]; then
   			echo "$(date) - INFO: Script has been started. Check the IP of $DDNSDOMAIN"
@@ -125,6 +124,6 @@ while true; do
 		fi
 	fi
 
-	# Unset the GOTIP variable before start next run
-	unset GOTIP
+	# Unset the CURRENT_IP variable before start next run
+	unset CURRENT_IP
 done
