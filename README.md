@@ -48,14 +48,14 @@ All logs are stored in the /tmp/afraid-ddns-ip-updater.log file inside the conta
 ## Changelog
 
 **2025-02-23**
-- **Fix:** `LOG` and `IPSTORE` variables are now defined before first use – previously the first error message was piped into `tee ""` (empty filename) and never written to the log file
-- **Fix:** `wget` availability check moved before any `wget` call – previously the check ran after wget was already used, so a missing wget caused silent failures with empty variables
-- **Fix:** After the IP provider loop, an invalid (non-empty but malformed) response could slip through the `if [ "$CURRENT_IP" ]` check and trigger a DDNS update with garbage data – replaced with `validateip "$CURRENT_IP"`
-- **Fix:** IP providers now use HTTPS instead of HTTP – HTTP allowed a MITM attacker to return a fake IP and cause the DDNS record to be updated with an arbitrary address
+- **Fix:** `LOG` and `IPSTORE` variables are now defined before first use. Previously the first error message was piped into `tee ""` (empty filename) and never written to the log file
+- **Fix:** `wget` availability check moved before any `wget` call. Previously the check ran after wget was already used, so a missing wget caused silent failures with empty variables
+- **Fix:** After the IP provider loop, an invalid (non-empty but malformed) response could slip through the `if [ "$CURRENT_IP" ]` check and trigger a DDNS update with garbage data. Replaced with `validateip "$CURRENT_IP"`
+- **Fix:** IP providers now use HTTPS instead of HTTP. HTTP allowed a MITM attacker to return a fake IP and cause the DDNS record to be updated with an arbitrary address
 - **Fix:** `$IPSTORE` is now properly quoted in the `cat` call
 - **Optimization:** The afraid.org API URL is fetched only once at startup (previously called 3 separate times) and the result is parsed in memory
 - **Optimization:** Array shuffling now uses `mapfile` instead of unquoted command substitution, which is safer against word splitting and glob expansion
-- **Optimization:** All log messages now consistently use `tee -a` (append mode) and write to both stdout and the log file – previously some INFO messages were stdout-only and `tee` was overwriting the log file on each call
+- **Optimization:** All log messages now consistently use `tee -a` (append mode) and write to both stdout and the log file. Previously some INFO messages were stdout-only and `tee` was overwriting the log file on each call
 
 <br><br>
 ## Known bugs
